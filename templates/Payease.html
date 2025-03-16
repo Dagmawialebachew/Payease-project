@@ -1,0 +1,215 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laborer Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body class="bg-[#FAFBFF] p-8 max-sm:p-0"> 
+
+ 
+    <div class=" sticky top-0 left-0 mb-2 px-8 sm:px-0 py-2">
+        <img width="150" src="{% static 'logo/payease-bg-2.png' %}">
+      </div>
+
+   
+<div  class="p-6 mb-32 bg-white shadow-lg rounded-lg relative">
+    <div id="redirectToRegister" class="absolute max-sm:right-12 right-10 -top-4 hover:-top-3 transition-all duration-500 cursor-pointer"> <img src="{% static 'logo/Add.png' %}" width="30" height="30" alt="" srcset=""></div>
+    <div id="redirectToTransaction" class="absolute max-sm:right-3 right-0 -top-4 hover:-top-3 transition-all duration-500 cursor-pointer"> <img src="{% static 'logo/transaction.png' %}" width="30" height="30" alt="" srcset=""></div>
+
+    <div class="flex justify-between max-sm:flex-col max-sm:justify-start items-center max-sm:items-start gap-10 mb-4">
+        <h2 class="text-xl max-md:text-sm font-semibold">Laborers Dashboard</h2>
+            <div class="relative">
+                <input type="text" placeholder="Search" id="searchInput" onkeyup="searchLaborers()" class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none ">
+            </div>
+            <div>
+                <form method="GET"  action="{% url 'dashboard' %}">
+                <select id="sortSelect" name="sort" class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none">
+                  <option class="text-gray-400" disabled selected>Sort by:</option>
+                  <option class="font-bold" value="Newest">Newest</option>
+                  <option value="Oldest">Oldest</option>
+                  <option value="Highest_Salary">Highest Salary</option>
+                  <option value="Lowest_Salary">Lowest Salary</option>
+              </select>
+            </form>
+            </div>
+            <button type="submit" class="hidden">Submit</button>  <!-- Hidden submit button -->
+
+    </div>
+    <div class="overflow-x-auto overflow-y-scroll">
+        <table class="min-w-full border-separate border-spacing-y-4 border-none text-left text-sm">
+            <thead>
+                <tr>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative">Name</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative ">Phone</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal ">Role</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal ">Salary</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative ">Start Date</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative">Days Worked</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative">Loan</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative">Total Amount</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative">Laborer Status</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative">Payment Status</th>
+                </tr>
+            </thead>
+            <tbody id="laborerTableBody">
+              {% for laborer in laborers%}
+                <tr >
+                     <td class="p-3 min-w-28 max-sm:min-w-44 max-sm:pl-0">
+                        <div class="flex items-center justify-between gap-1">
+                            <a href="{% url 'delete_laborer' laborer.id %}"><img width="24" height="24"  class="inline mr-2" src="{% static 'logo/delete.png' %}"></a>{{ laborer.name}} 
+                        
+                        <form action="{% url 'amount_to_pay' laborer.id %}" class="inline"  >
+                            {% csrf_token %}
+                        <button class="px-2 py-1 text-sm rounded   bg-active-text text-white font-bold font-lato ">
+                        P
+                      </button></div>
+                    </form>
+                    
+                    </td>
+                    <td class="p-3">{{laborer.phone}}</td>
+                    <td class="p-3">{{laborer.role}}</td>
+                    <td class="p-3">{{laborer.salary}}</td>
+                    <td class="p-3">{{ laborer.start_date|date:"Y-m-d"}}</td>
+                    {% for payment in payments %}
+                          {% if payment.laborer.id == laborer.id %}
+                        
+                          <td class="p-3">{{ payment.days_worked}}</td>
+                          <td class="p-3">
+                                 <div class="flex flex-row items-center gap-2"><p>{{ laborer.loan}}</p><form action="{% url 'amount_to_loan' laborer.id %}"  >
+                                {% csrf_token %}
+                            <button class="px-2 py-1 text-sm rounded border bg-opacity-30  
+                            border-stroke bg-soft-teal ">
+                            L
+                          </button>
+                        </form></div>
+                            
+                          </td>
+                          <td class="p-3">{{ payment.total_amount}}</td>
+  
+                            <td class="p-3  space-x-2 min-w-36">
+                                <div class="flex items-center gap-2">
+                              <span class="px-2 py-1 text-sm rounded border bg-opacity-30  
+                                  {% if laborer.status == 'Active' %} border-stroke bg-[rgba(0,255,0,0.3)]  text-active-text
+                                  {%elif laborer.status == 'Re-enable'%}
+                                  bg-[rgba(0,255,0,0.3)] text-active-text
+                                  {% else %}bg-red-200 text-red-800{% endif %}">
+                                  {{ laborer.status }}
+                              </span>
+                              <span>
+                                
+                          {% if laborer.status == 'Active' or laborer.status == 'Re-enable' %}
+                          <form action="{% url 'terminate_contract' laborer.id %}" method="post">
+                            {% csrf_token %}
+                            <button id="terminateContract" class="bg-red-200 text-red-800 rounded-md px-2 py-1" type="submit">T</button>
+                        </form>
+                      {% else %}
+                      <form id="reEnableForm" class="special-form" method="post" action="{% url 'activate_contract' laborer.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" id="reEnableTime" name="re_enable_time">
+
+                        <button class="bg-[rgba(0,255,0,0.3)]  text-active-text rounded-md px-2 py-1" type="submit">R</button>                    
+                    </form>
+                     
+                      {% endif %}
+                              </span>
+                            </div>
+
+                          </td>   
+
+                          <td class="p-3">{{ payment.payment_status}}</td>
+                          {% endif %}
+                      {% empty %}
+                          <td>No payment record found</td>
+                      {% endfor %}
+                          
+                          
+                          
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+  
+          <!-- No Data Message -->
+          {% if not laborers %}
+          <div class="mt-4 text-center text-gray-600">
+              No laborers found.
+          </div>
+          {% endif %}
+      </div>
+  
+  </body>
+  
+  </html>
+  
+  
+  
+  
+                    
+
+ <script>
+    // Auto-refresh the page every 5 seconds
+    setTimeout(() => {
+            window.location.reload();
+        }, 100000);
+
+        document.getElementById('redirectToRegister').addEventListener('click', function() {
+        window.location.href = '/register-laborer/';
+    });
+ 
+     document.getElementById('redirectToTransaction').addEventListener('click', function() {
+        window.location.href = '/transaction_history'
+     })
+
+const forms = document.querySelectorAll('form.special-form');
+
+forms.forEach(form => {
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const inputField = this.querySelector('#reEnableTime'); 
+        if (!inputField) {
+            console.error('Input field not found in the form');
+            return;
+        }
+
+        const now = new Date();
+        inputField.value = now.toISOString().slice(0, 16); // 
+
+        console.log('Form is being submitted');
+        console.log('re_enable_time:', inputField.value);
+
+        this.submit();
+    });
+});
+
+document.getElementById('searchInput').addEventListener('input', function () {
+    let query = this.value.trim();
+    fetch(`/dashboard/?q=${query}`, {
+        headers: { "X-Requested-With": "XMLHttpRequest" } // Required to detect AJAX in Django
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('laborerTableBody').innerHTML = data.html;
+    })
+    .catch(error => console.error("Error fetching search results:", error));
+});
+
+document.getElementById('sortSelect').addEventListener('change', function() {
+    this.form.submit();  
+});
+
+     
+       
+
+</script>   
+</body>
+
+</html>
+
+

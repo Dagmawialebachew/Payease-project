@@ -1,0 +1,191 @@
+
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+  <title>Payease</title>
+</head>
+<body class="m-0 p-0 border-none outline-none box-border font-poppins bg-[#FAFBFF] ">
+
+<main class="flex gap-2 w-full flex-col">
+
+  <div class="mb-2 px-4 py-2">
+    <img width="150" src="{% static 'logo/payease-bg-2.png' %}">
+  </div>
+
+ <div class="main-content flex-1 relative bg-none w-full p-4">
+  
+
+  <div class="w-full grid grid-cols-3 gap-4 bg-white shadow-lg rounded-xl px-4 py-6 max-md:grid-cols-1 mb-4 max-md:place-items-baseline relative" >
+
+    <div id="redirectToDashboard" class="absolute max-sm:right-3 right-0 -top-2 hover:-top-1 transition-all duration-500 cursor-pointer"> <img src="{% static 'logo/dashboard.png' %}" width="30" height="30" alt="" srcset=""></div>
+    <div class="grid grid-cols-2  place-items-start w-48">
+  
+      <div class="bg-green-100 p-4 rounded-full">
+        <img src="{% static 'logo/balance.svg' %}" alt="icon" width="27" height="27">
+      </div>
+      {% if context %}
+      <div class="flex flex-col items-start justify-center">
+      <p class="text-gray-500 mt-2 text-sm">Total paid</p>
+      <h2 class="text-2xl font-bold">{{context.total_paid}}</h2>
+      {% else %}
+      <div class="flex flex-col items-start justify-center">
+        <p class="text-gray-500 mt-2 text-sm">Total paid</p>
+        <h2 class="text-2xl font-bold">0</h2>
+      {% endif %}
+      
+    </div>
+    </div>
+
+    <div class="grid grid-cols-2  place-items-start w-48">
+  
+      <div class="bg-green-100 p-4 rounded-full">
+        <img src="{% static 'logo/wallet.svg' %}" alt="icon" width="27" height="27">
+      </div>
+      {% if context %}
+      <div class="flex flex-col items-start justify-center">
+      <p class="text-gray-500 mt-2 text-sm">Total Loan</p>
+      <h2 class="text-2xl font-bold">{{context.total_loan}}</h2>
+
+      {% else %}
+
+      <div class="flex flex-col items-start justify-center">
+        <p class="text-gray-500 mt-2 text-sm">Total Loan</p>
+        <h2 class="text-2xl font-bold">0</h2>
+      {% endif %}
+    </div>
+    </div>
+  
+ 
+  
+    <div class="grid grid-cols-2 place-items-start w-48">
+      <div class="bg-green-100 p-4 rounded-full">
+        <img src="{% static 'logo/laborer.png' %}" alt="icon" width="32" height="32">
+      </div>
+  
+      {% if context %}
+      <div class="flex flex-col items-start justify-center">
+      <p class="text-gray-500 mt-2 text-sm">      
+        Laborers
+      </p>
+      <h2 class="text-2xl font-bold">{{context.total}}</h2>
+      {% else %}
+  
+      <div class="flex flex-col items-start justify-center">
+        <p class="text-gray-500 mt-2 text-sm">      
+          Laborers
+        </p>
+        <h2 class="text-2xl font-bold">0</h2>
+        {% endif %}
+    </div>
+    </div>
+  
+   
+  
+  </div>
+
+  
+
+
+  <div class="p-6 bg-white shadow-lg rounded-lg overflow-x-auto overflow-y-scroll">
+    
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl max-md:text-sm font-semibold">Transaction History</h2>
+        <div>
+          <form method="GET"  action="{% url 'transaction_history' %}">
+          <select id="sortSelect" name="sort" class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none">
+            <option class="text-gray-400" disabled selected>Sort by:</option>
+            <option class="font-bold" value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
+            <option value="Highest_Paid">Highest Paid</option>
+            <option value="Lowest_Paid">Lowest Paid</option>
+            <option value="Payment_Type">Payment Type</option>
+        </select>
+      </form>
+      </div>
+      <button type="submit" class="hidden">Submit</button>  <!-- Hidden submit button -->
+        
+    </div>
+    <div class="">
+        <table class="w-full min-w-[1000px]  border-separate border-spacing-y-4 border-none text-left text-sm">
+
+            <thead">
+                <tr>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative">Name<button class="absolute"><img src="{% static 'logo/sort-by.svg' %}" ></button></th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative ">Role<button class="absolute"><img src="{% static 'logo/sort-by.svg' %}" ></button> </th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal ">Date</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal ">Validity</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal ">Payment type</th>
+                    <th class="p-3 text-light-gray opacity-50 font-normal relative ">Paid Birr<button class="absolute"><img src="{% static 'logo/sort-by.svg' %}" ></button></th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+              {% if transaction_data %}
+              {% for data in transaction_data %}
+               {% if data.validity == 'Done' %}
+
+                <tr class="border-t bg-white shadow-sm">
+                    <td class="p-3">{{data.name}}</td>
+                    <td class="p-3">{{data.role}}</td>
+                    <td class="p-3">{{ data.start_date}}</td>
+                    <td class="p-3 text-active-text">{{data.validity}}</td>
+                    <td class="p-3
+                    {% if data.type_of_payment == 'Salary'%}
+                    text-active-text
+                    {%else%}
+                    text-red-500
+                    {% endif %}
+
+                    "
+                    >{{data.type_of_payment}}</td>
+                    <td class="p-3">{{data.paid_amount}} Birr</td>
+                   
+                </tr>
+                  
+                 {% endif %}
+                {% endfor %}
+                {% else %}
+                  <p>No transaction yet!</p>
+                  {% endif %}
+
+
+            </tbody>
+          
+        </table>
+    </div>
+    <div class="flex justify-between items-center mt-4 text-sm text-gray-500">
+        <span class="hidden">Showing data 1 to 8 of (total entries) entries</span>
+        <div class="flex gap-1">
+            <button class="border px-2 py-1 rounded">&lt;</button>
+            <button class="bg-blue-500 text-white px-2 py-1 rounded">1</button>
+            <button class="border px-2 py-1 rounded">2</button>
+            <button class="border px-2 py-1 rounded">...</button>
+            <button class="border px-2 py-1 rounded">40</button>
+            <button class="border px-2 py-1 rounded">&gt;</button>
+        </div>
+    </div>
+</div>
+
+ </div>
+
+
+
+
+</main>
+
+<script>
+
+document.getElementById('redirectToDashboard').addEventListener('click', function() {
+      window.location.href = '/dashboard/'
+   })
+
+   document.getElementById('sortSelect').addEventListener('change', function() {
+    this.form.submit();  
+});
+
+</script>
+</body>
+</html>

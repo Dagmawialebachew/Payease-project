@@ -1,0 +1,69 @@
+{% for laborer in laborers %}
+<tr>
+    <td class="p-3 min-w-44">
+        <a href="{% url 'delete_laborer' laborer.id %}">
+            <img width="24" height="24" class="inline mr-2" src="{% static 'logo/delete.png' %}">
+        </a> 
+        {{ laborer.name }} 
+        <form action="{% url 'amount_to_pay' laborer.id %}" class="inline">
+            {% csrf_token %}
+            <button class="px-2 py-1 text-sm rounded bg-active-text text-white font-bold">
+                P
+            </button>
+        </form>
+    </td>
+    <td class="p-3">{{ laborer.phone }}</td>
+    <td class="p-3">{{ laborer.role }}</td>
+    <td class="p-3">{{ laborer.salary }}</td>
+    <td class="p-3">{{ laborer.start_date|date:"Y-m-d" }}</td>
+
+    {% for payment in payments %}
+        {% if payment.laborer.id == laborer.id %}
+            <td class="p-3">{{ payment.days_worked }}</td>
+            <td class="p-3">
+                <div class="flex flex-row items-center gap-2">
+                    <p>{{ laborer.loan }}</p>
+                    <form action="{% url 'amount_to_loan' laborer.id %}">
+                        {% csrf_token %}
+                        <button class="px-2 py-1 text-sm rounded border bg-opacity-30 border-stroke bg-soft-teal">
+                            L
+                        </button>
+                    </form>
+                </div>
+            </td>
+            <td class="p-3">{{ payment.total_amount }}</td>
+            <td class="p-3 space-x-2 min-w-36">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-1 text-sm rounded border bg-opacity-30  
+                        {% if laborer.status == 'Active' %} border-stroke bg-[rgba(0,255,0,0.3)]  text-active-text
+                        {% elif laborer.status == 'Re-enable' %} bg-[rgba(0,255,0,0.3)] text-active-text
+                        {% else %} bg-red-200 text-red-800 {% endif %}">
+                        {{ laborer.status }}
+                    </span>
+                    <span>
+                        {% if laborer.status == 'Active' or laborer.status == 'Re-enable' %}
+                            <form action="{% url 'terminate_contract' laborer.id %}" method="post">
+                                {% csrf_token %}
+                                <button id="terminateContract" class="bg-red-200 text-red-800 rounded-md px-2 py-1" type="submit">T</button>
+                            </form>
+                        {% else %}
+                            <form id="reEnableForm" class="special-form" method="post" action="{% url 'activate_contract' laborer.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" id="reEnableTime" name="re_enable_time">
+                                <button class="bg-[rgba(0,255,0,0.3)] text-active-text rounded-md px-2 py-1" type="submit">R</button>
+                            </form>
+                        {% endif %}
+                    </span>
+                </div>
+            </td>
+            <td class="p-3">{{ payment.payment_status }}</td>
+        {% endif %}
+    {% empty %}
+        <td colspan="10" class="text-center text-gray-600">No payment record found</td>
+    {% endfor %}
+</tr>
+{% empty %}
+<tr>
+    <td colspan="10" class="text-center text-gray-600">No laborers found.</td>
+</tr>
+{% endfor %}
