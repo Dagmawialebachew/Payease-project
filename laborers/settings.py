@@ -103,26 +103,26 @@ WSGI_APPLICATION = 'laborers.wsgi.application'
 
 pymysql.install_as_MySQLdb()
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3', 
-#         'NAME': BASE_DIR / "db.sqlite3", 
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydb',  # Change to your database name
-        'USER': 'payease',  # Your MySQL username
-        'PASSWORD': '1998Dagi#t',  # Your MySQL password
-        'HOST': 'localhost',  # Use '127.0.0.1' if needed
-        'PORT': '3307',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        'ENGINE': 'django.db.backends.sqlite3', 
+        'NAME': BASE_DIR / "db.sqlite3", 
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mydb',  # Change to your database name
+#         'USER': 'payease',  # Your MySQL username
+#         'PASSWORD': '1998Dagi#t',  # Your MySQL password
+#         'HOST': 'localhost',  # Use '127.0.0.1' if needed
+#         'PORT': '3307',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+#         }
+#     }
+# }
 
 
 # Password validation
