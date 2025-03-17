@@ -1,3 +1,3 @@
 web: gunicorn laborers.wsgi --log-file -
 
-web: python manage.py migrate && gunicorn labroers.wsgi
+web: python manage.py migrate && gunicorn labrores.wsgi
