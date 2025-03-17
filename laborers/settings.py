@@ -23,6 +23,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 # connect(db="payease", host=MONGODB_ATLAS_URI)
 import os
+import pymysql 
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -45,7 +46,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-lomln!+z#pg&fybrrvpq+qw^9gfi0ktbh)g4rl9_mlm26m8_dt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,7 +100,6 @@ WSGI_APPLICATION = 'laborers.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-import pymysql 
 
 pymysql.install_as_MySQLdb()
 
@@ -165,6 +166,9 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static/"),
 
 ]
+
+
+STATICSTORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

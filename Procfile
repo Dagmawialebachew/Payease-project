@@ -1,1 +1,3 @@
-web: gunicorn laborers.wsgi --bind 0.0.0.0:$PORT
+web: gunicorn laborers.wsgi --log-file -
+
+web: python manage.py migrate && gunicorn labroers.wsgi
