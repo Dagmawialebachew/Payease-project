@@ -9,25 +9,15 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
-# from mongoengine import connect
-
-# MONGODB_ATLAS_URI = "mongodb://payease-2025:UOmiJs8K72zFBEo9@payease-shard-00-00.cnbe3.mongodb.net:27017,payease-shard-00-01.cnbe3.mongodb.net:27017,payease-shard-00-02.cnbe3.mongodb.net:27017/payease?replicaSet=atlas-cluster-0&authSource=admin"
-# # MONGODB_ATLAS_URI = "mongodb+srv://payease-2025:UOmiJs8K72zFBEo9@payease-shard-00-00.cnbe3.mongodb.net/payease?retryWrites=true&w=majority"
-
-
-# # MONGODB_ATLAS_URI = "mongodb+srv://payease-2025:UOmiJs8K72zFBEo9@payease-shard-00-00.cnbe3.mongodb.net/"
-# # MONGODB_ATLAS_URI = "mongodb+srv://payease-2025>:UOmiJs8K72zFBEo9@payease.cnbe3.mongodb.net/"
-
-
-
-# connect(db="payease", host=MONGODB_ATLAS_URI)
 import os
+import dj_database_url
 import pymysql 
+pymysql.install_as_MySQLdb()
+
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.getenv('DATABASE_URL', '')
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 
@@ -101,15 +91,27 @@ WSGI_APPLICATION = 'laborers.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
-pymysql.install_as_MySQLdb()
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', 
-        'NAME': BASE_DIR / "db.sqlite3", 
-    }
+    'default': dj_database_url.config(
+        default="mysql://root:iYDHrdkFYBXJzzBSRulBuCqpGdXTrsyg@gondola.proxy.rlwy.net:13307/railway",
+        conn_max_age=600
+    )
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'railway',  
+#         'USER': 'root',  
+#         'PASSWORD': 'iYDHrdkFYBXJzzBSRulBuCqpGdXTrsyg',
+#         'HOST': 'mysql.railway.internal', 
+#         'PORT': '3306',  
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+#         }
+#     }
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',

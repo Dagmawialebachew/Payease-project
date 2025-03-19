@@ -12,7 +12,6 @@
     <div class="rounded-lg flex items-baseline text-xl shadow-lg px-10 py-16 mt-10 h-screen">
 
         
-
         <form id="paymentform" action="{% url 'amount_to_loan' laborer.id %}" method="POST" class="flex flex-col gap-4">
 
             {% csrf_token %}
