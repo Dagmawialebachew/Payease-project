@@ -188,18 +188,27 @@ forms.forEach(form => {
     });
 });
 
-document.getElementById('searchInput').addEventListener('input', function () {
+function searchLaborers() {
     let query = document.getElementById('searchInput').value;
+
     let xhr = new XMLHttpRequest();
     xhr.open('GET', `/dashboard/?q=` + query, true);
+
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             document.getElementById('laborerTableBody').innerHTML = xhr.responseText;
-        } else if (xhr.readyState === 4) {
-            console.error('Error fetching search results:', xhr.status, xhr.statusText);
         }
     };
+
+    // Send the request
     xhr.send();
+
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    searchLaborers();  
 });
 
 document.getElementById('sortSelect').addEventListener('change', function() {

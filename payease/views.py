@@ -64,6 +64,7 @@ def dashboard(request):
     
     query = request.GET.get('q', '').strip()
     sort_option = request.GET.get('sort', 'Newest')
+    print(request.headers)
     
     if query:
             laborers = Laborer.objects.filter(
@@ -157,8 +158,9 @@ def dashboard(request):
               payment.total_amount = payment.total_amount
               payment.save()
               payments_to_update.append(payment)
-    if request.is_ajax():
-        return render(request, 'laborer_table_rows.html', {'laborers': laborers})
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        print('the request matches')
+        return render(request, 'laborer_table_rows.html', {'laborers': laborers, 'payments': payments_to_update})
     
     return render(request, 'Payease.html', {'laborers': laborers,
                                             'payments': payments_to_update})
