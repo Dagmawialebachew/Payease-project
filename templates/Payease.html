@@ -24,7 +24,7 @@
     <div class="flex justify-between max-sm:flex-col max-sm:justify-start items-center max-sm:items-start gap-10 mb-4">
         <h2 class="text-xl max-md:text-sm font-semibold">Laborers Dashboard</h2>
             <div class="relative">
-                <input type="text" placeholder="Search" id="searchInput" onkeyup="searchLaborers()" class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none ">
+                <input type="text" placeholder="Search" id="searchInput"  class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none ">
             </div>
             <div>
                 <form method="GET"  action="{% url 'dashboard' %}">
@@ -189,15 +189,17 @@ forms.forEach(form => {
 });
 
 document.getElementById('searchInput').addEventListener('input', function () {
-    let query = this.value.trim();
-    fetch(`/dashboard/?q=${query}`, {
-        headers: { "X-Requested-With": "XMLHttpRequest" } // Required to detect AJAX in Django
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('laborerTableBody').innerHTML = data.html;
-    })
-    .catch(error => console.error("Error fetching search results:", error));
+    let query = document.getElementById('searchInput').value;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', `/dashboard/?q=` + query, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById('laborerTableBody').innerHTML = xhr.responseText;
+        } else if (xhr.readyState === 4) {
+            console.error('Error fetching search results:', xhr.status, xhr.statusText);
+        }
+    };
+    xhr.send();
 });
 
 document.getElementById('sortSelect').addEventListener('change', function() {

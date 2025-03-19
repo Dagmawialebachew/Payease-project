@@ -75,10 +75,10 @@ def dashboard(request):
             Q(payment__payment_status__icontains=query) |
             Q(status__icontains=query)) 
             print(laborers)
-        
+            
     else:
          
-     laborers = Laborer.objects.all()
+     laborers = Laborer.objects.all()     
      
     if sort_option == 'Newest':
         print('sort_option is newest')
@@ -157,10 +157,9 @@ def dashboard(request):
               payment.total_amount = payment.total_amount
               payment.save()
               payments_to_update.append(payment)
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        html = render_to_string('laborer_table_rows.html', {'laborers': laborers, 'payments': payments_to_update})
-        return JsonResponse({'html': html})
-
+    if request.is_ajax():
+        return render(request, 'laborer_table_rows.html', {'laborers': laborers})
+    
     return render(request, 'Payease.html', {'laborers': laborers,
                                             'payments': payments_to_update})
     
