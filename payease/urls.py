@@ -4,7 +4,7 @@ from django.urls import path,include
 from payease import views
 
 urlpatterns = [
-    path('register-laborer/', views.register_laborer, name='register_laborer'),
+    path('', views.register_laborer, name='register_laborer'),
     path('terminate-contract/<str:laborer_id>/', views.terminate_contract, name='terminate_contract'),
     path('activate-contract/<str:laborer_id>/', views.activate_contract, name='activate_contract'),
     path('dashboard/', views.dashboard, name='dashboard'),
