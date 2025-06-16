@@ -27,7 +27,7 @@
                 <input type="text" placeholder="Search" id="searchInput"  class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none ">
             </div>
             <div>
-                <form method="GET"  action="{% url '' %}">
+                <form method="GET"  action="{% url 'dashboard' %}">
                 <select id="sortSelect" name="sort" class="border rounded-lg px-3 py-1.5 text-sm focus:outline-none">
                   <option class="text-gray-400" disabled selected>Sort by:</option>
                   <option class="font-bold" value="Newest">Newest</option>
