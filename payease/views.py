@@ -180,7 +180,7 @@ def terminate_contract(request, laborer_id):
       payment.save()
 
       print(laborer.status)
-      return redirect('')
+      return redirect('/')
     
     
     return JsonResponse({"error": "Invalid request method"}, status=400)
@@ -208,7 +208,7 @@ def amount_to_pay (request, laborer_id):
             paid_amount = payment.paid_amount,
         )
         transaction_history.save()
-        return redirect('')
+        return redirect('/')
         
     return render(request, 'Payment-card.html', {'laborer': laborer, 'payment': payment})
 
@@ -239,7 +239,7 @@ def amount_to_loan(request, laborer_id):
         transaction_history.save()
         laborer.deducted_loan = laborer.loan 
         laborer.save()
-        return redirect('')
+        return redirect('/')
         
     return render(request, 'Loan-card.html', {'laborer': laborer, 'payment': payment})
 
@@ -267,7 +267,7 @@ def activate_contract(request, laborer_id):
     
 
       print(laborer.status)
-      return redirect('')
+      return redirect('/')
     
     
     return JsonResponse({"error": "Invalid request method"}, status=400)
@@ -281,7 +281,7 @@ def delete_laborer(request, laborer_id):
     payment = get_object_or_404(Payment, laborer = laborer)
 
     laborer.delete()
-    return redirect('')
+    return redirect('/')
 
 @csrf_exempt
 
